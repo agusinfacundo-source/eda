@@ -1,0 +1,138 @@
+import pandas as pd 
+import matplotlib.pyplot as plt 
+import seaborn as sns
+
+dataframe = pd.read_csv("social_media_user_behavior.csv")
+
+dataframe.rename(columns={"gender":"genero", 
+"age": "edad",
+"profession" : "profesion",
+"daily_usage_hours":"uso_diario",
+"self_reported_mental_health_score":"salud_mental",
+"primary_platform":"plataforma",
+"sessions_per_day":"sesion_por_dia",
+"preferred_device":"dispositivo_preferido",
+"avg_session_duration_min":"duracion_promedio_de_sesion",
+"followers_count":"cantidad_de_seguidores",
+"following_count":"cantidad_de_seguidos",
+"posts_per_week":"publicaciones_por_semana",
+"likes_given_per_day":"likes_por_dia",
+"comments_per_day":"comentarios_por_dia",
+"shares_per_day":"compartidos_por_dia",
+"dms_sent_per_day":"mensajes_privados_por_dia",
+"ad_click_rate":"tasa_de_clicks_en_anuncios",
+"monthly_spend_via_social_usd":"gasto_mensual_en_redes",
+}, inplace=True)
+
+print(dataframe.head())
+print(dataframe.dtypes)
+
+print(dataframe.isnull().sum())
+
+
+print(dataframe["edad"].min())
+print(dataframe["edad"].max())
+
+print(dataframe.groupby('genero')['edad'].mean())
+
+sns.boxplot(data=dataframe,x="genero",y="edad")
+plt.savefig("edades.jpg") 
+plt.show() 
+
+plt.clf()
+
+print(dataframe["edad"].describe())
+
+print(dataframe["profesion"].value_counts())
+
+print(dataframe.groupby("profesion")["uso_diario"].agg(["mean"]))
+
+
+sns.boxplot(data=dataframe,x="profesion",y="uso_diario")
+plt.savefig("relacion.jpg") 
+plt.show()
+
+plt.clf()
+
+print(dataframe["uso_diario"].describe())
+
+print(dataframe["salud_mental"].describe())
+
+
+sns.scatterplot(data=dataframe,x="uso_diario",y="salud_mental")
+plt.savefig("relacion2.jpg") 
+plt.show()
+
+plt.clf()
+
+
+print(dataframe.groupby("genero")[["uso_diario", "salud_mental"]].mean())
+
+
+print(dataframe.groupby("profesion")["salud_mental"].mean())
+
+print(dataframe["plataforma"].value_counts())
+
+print(dataframe.groupby("plataforma")["uso_diario"].mean())
+
+print(dataframe.groupby("plataforma")["sesion_por_dia"].mean())
+
+sns.barplot(data=dataframe, x="plataforma",y="sesion_por_dia")
+plt.savefig("relacion3.jpg")
+plt.show()
+
+
+plt.clf()
+
+sns.barplot( data=dataframe,x="plataforma",y="uso_diario",hue="genero")
+plt.savefig("relacion4.jpg")
+plt.show()
+
+plt.clf()
+
+print(dataframe["dispositivo_preferido"].value_counts(normalize=True))
+
+sns.countplot(data=dataframe,x="dispositivo_preferido")
+
+plt.savefig("muestra1.jpg")
+plt.show()
+
+plt.clf()
+
+
+print(dataframe.groupby("dispositivo_preferido")["uso_diario"].mean())
+
+corr = dataframe.corr(numeric_only=True)
+
+sns.heatmap(corr, annot=True, cmap="coolwarm")
+
+plt.savefig("heatmap.jpg")
+
+plt.show()
+
+plt.clf()
+#hola santi! 
+#estoy seguro que aca no se deberia de hacer el cierre teorico, lei e investigue y encontre que tengo que dar como un texto con mis observaciones
+#con respecto al EDA elegi este porque me parecio interesante y fue algo que senti que era sencillo para mi nivel, aunque me ayude con clases viejas y los apuntes del cuadernillo
+#no pude usar todo lo que me enseñaste en el curso (aunque lo intente lo mas que pude)
+
+#siento que la base y conocimientos los tengo pero que me falto el ordenar los procesos tal vez 
+
+#En el EDA, encontre que el rango minimo de edad que utilizan las redes sociales es de 17 años mientras que el maximo es de 53 años.
+#aunque no es mucho, predominan tanto el genero masculino como el binario, en cuanto a los profesionales y el uso que le dan.
+
+#Destaco que los profesionales como "engineers" son aquellos que le dan mas uso por sobre los "designer", aunque sacando un promedio 
+#pude descubrir que los investigadores usan un promedio de 3.24 hs mientras que los profesoras usan 2.72 hs.
+
+#luego lo lleve del lado de la salud mental, descubriendo que en un promedio entre genero, cantidad de horas de uso y salud mental no habia grandes variaciones acorde 
+#a lo esperado.
+
+#al momento de pasarlo al ambito profesional no encontre grades diferencias aunque pude descubrir que los emprendedores estan por debajo del promedio
+#predominante con respecto a los otros profesionales y que los investigadores siguen en el "max".
+
+#Lo que llamo mi atencion fue que las aplicaciones Instagram y Tiktok predominan por amplia diferencia respecto de otras aplicaciones que se encontraban en la lista 
+#en las cuales con la ayuda del countplot pude econtrar que el genero binario destaca en el uso de Facebook y que el genero "prefiero no decirlo" no se ve registrado en pinterest
+
+#Se entendio que hay 4 aplicaciones que demuestran una diferencia de uso por sobre el resto con un promedio de uso de 5 hs.
+
+
